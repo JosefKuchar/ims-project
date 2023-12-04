@@ -114,6 +114,40 @@ struct Cell {
     CellType getType() { return mType; }
 };
 
+struct Roundabout {
+    std::array<Cell, approach_length> mRoad;
+
+    int getSpaceAhead(int index) {
+        for (int i = index; i < approach_length; i++) {
+            if (mRoad[i].mType != CellType::Road) {
+                return i - index;
+            }
+        }
+        return approach_length - index;
+    }
+
+    int getSpaceBehind(int index) {
+        int total = 0;
+
+        while (total < approach_length) {
+            if (mRoad[index].mType != CellType::Road) {
+                return total;
+            }
+            index = index - 1;
+            total += 1;
+            if (index < 0) {
+                index = approach_length - 1;
+            }
+        }
+
+        return total;
+    }
+
+    std::tuple<int, int> getSpace(int index) {
+        return std::tuple<int, int>(getSpaceBehind(index), getSpaceAhead(index));
+    }
+};
+
 struct Approach {
     std::array<Cell, approach_length> mRoad;
     bool mIsJoining;
@@ -127,8 +161,11 @@ struct Approach {
     };
 
     int freeSpace(int index) {
-        while (index < approach_length && mRoad[index].mType != CellType::Road) {
-            index++;
+        auto& meta = mRoad[index].mMeta;
+        if (meta != nullptr) {
+            while (index < approach_length && mRoad[index].mMeta == meta) {
+                index++;
+            }
         }
         for (int i = index; i < approach_length; i++) {
             if (mRoad[i].mType != CellType::Road) {
@@ -139,21 +176,20 @@ struct Approach {
         return approach_length - index;
     }
 
-    int freeSpaceAtEntry(int vehicle_len) {
-        for (int i = vehicle_len; i < approach_length; i++) {
-            if (mRoad[i].mType != CellType::Road) {
-                return i - vehicle_len;
-            }
+    int distanceFromEnd(int index) {
+        auto& meta = mRoad[index].mMeta;
+        int j = 0;
+        while (index + j < approach_length && meta == mRoad[index + j].mMeta) {
+            j++;
         }
-
-        return approach_length - vehicle_len;
+        return approach_length - (index + j);
     }
 };
 
 class Simulation {
     std::array<Approach, num_approaches> approaches;
     std::array<Approach, num_approaches> leaves;
-    std::array<Cell, approach_length> roundaboutRoad;
+    Roundabout mRoundabout;
     std::random_device mRd;
     std::mt19937 mGen;
     std::normal_distribution<> mNasD;
@@ -168,9 +204,12 @@ class Simulation {
             leaves[i] = Approach(false, (approach_length / num_approaches) * i);
         };
     }
+
     void update() {
         std::array<Approach, num_approaches> new_approaches;
         std::array<Approach, num_approaches> new_leaves;
+        std::array<Cell, approach_length> new_roundabout_road;
+
         for (int i = 0; i < num_approaches; i++) {
             new_approaches[i] = Approach(true, (approach_length / num_approaches) * i);
             new_leaves[i] = Approach(false, (approach_length / num_approaches) * i);
@@ -181,7 +220,7 @@ class Simulation {
             auto meta = CellMeta(mNasD, mGen);
             auto vehicle_type = generateType(mGen);
             auto vehicle_length = getTypeLength(vehicle_type);
-            auto free_space = approaches[i].freeSpaceAtEntry(vehicle_length);
+            auto free_space = approaches[i].freeSpace(vehicle_length);
 
             if (meta.mNas > free_space) {
                 continue;
@@ -201,34 +240,72 @@ class Simulation {
                     first = true;
                     continue;
                 }
+                if (!first) {
+                    continue;
+                }
+                first = false;
 
                 auto& meta = cell.mMeta;
                 auto& speed = meta->mSpeed;
 
                 int gap = approaches[i].freeSpace(j);
 
-                if (first) {
+                if (gap < speed) {
+                    speed = gap * (2.0 / 3.0);
+                } else {
+                    // TODO: Hack
+                    speed += 2;
+                    if (speed > 14) {
+                        speed = 14;
+                    }
+                    // Hack 2
+                    gap = approaches[i].freeSpace(j);
                     if (gap < speed) {
-                        speed = gap * (2.0 / 3.0);
+                        speed = gap;
                     }
-                    if (speed > 0) {
-                        std::uniform_real_distribution<> dis(0, 1);
-                        float r = dis(mGen);
-                        if (r < pb) {
-                            speed -= 1;
-                        }
-                    }
-
-                    first = false;
                 }
 
-                if (j + speed >= approach_length) {
-                    // TODO
-                    new_approaches[i].mRoad[j] = Cell();
-                    continue;
+                if (speed > 0) {
+                    std::uniform_real_distribution<> dis(0, 1);
+                    float r = dis(mGen);
+                    if (r < pb) {
+                        speed -= 1;
+                    }
                 }
-                new_approaches[i].mRoad[j + speed] = cell;
+
+                // If we are at the end of the approach
+                // if (approaches[i].distanceFromEnd(j) == 0) {
+                //     auto [space_behind, space_ahead] =
+                //     mRoundabout.getSpace(approaches[i].mIndex);
+
+                //     // Error in paper
+                //     if (space_behind >= meta->mNas && getTypeLength(cell.mType) <= space_ahead) {
+                //         for (int k = j; k < approach_length && approaches[i].mRoad[k].mMeta ==
+                //         meta;
+                //              k++) {
+                //             mRoundabout.mRoad[approaches[i].mIndex + k - j] =
+                //                 approaches[i].mRoad[k];
+                //         }
+                //     }
+                //     break;
+                // }
+
+                // std::cout << "Distance from end: " << approaches[i].distanceFromEnd(j) <<
+                // std::endl;
+                if (speed > approaches[i].distanceFromEnd(j)) {
+                    speed = approaches[i].distanceFromEnd(j);
+                }
+
+                // Update car
+                for (int k = j; k < approach_length && approaches[i].mRoad[k].mMeta == meta; k++) {
+                    new_approaches[i].mRoad[k + speed] = approaches[i].mRoad[k];
+                }
             }
+        }
+
+        // Todo update cars on roundabout
+        for (int i = 0; i < approach_length; i++) {
+            new_roundabout_road[i] = mRoundabout.mRoad[i];
         }
 
         // Copy results
@@ -236,6 +313,8 @@ class Simulation {
             approaches[i] = new_approaches[i];
             leaves[i] = new_leaves[i];
         };
+
+        mRoundabout.mRoad = new_roundabout_road;
     };
 
     void print() {
@@ -243,8 +322,14 @@ class Simulation {
             for (auto& c : a.mRoad) {
                 printCellType(c.mType);
             }
+            std::cout << " " << a.mIndex;
             std::cout << std::endl << std::endl;
         }
+        std::cout << "---" << std::endl;
+        for (auto& c : mRoundabout.mRoad) {
+            printCellType(c.mType);
+        }
+        std::cout << std::endl;
     }
 
     void run(int num_iters) {
@@ -258,6 +343,6 @@ class Simulation {
 
 int main() {
     Simulation sim;
-    sim.run(50);
+    sim.run(1000);
     return 0;
 }
