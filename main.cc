@@ -274,21 +274,18 @@ class Simulation {
                 }
 
                 // If we are at the end of the approach
-                // if (approaches[i].distanceFromEnd(j) == 0) {
-                //     auto [space_behind, space_ahead] =
-                //     mRoundabout.getSpace(approaches[i].mIndex);
+                if (approaches[i].distanceFromEnd(j) == 0) {
+                    auto [space_behind, space_ahead] = mRoundabout.getSpace(approaches[i].mIndex);
 
-                //     // Error in paper
-                //     if (space_behind >= meta->mNas && getTypeLength(cell.mType) <= space_ahead) {
-                //         for (int k = j; k < approach_length && approaches[i].mRoad[k].mMeta ==
-                //         meta;
-                //              k++) {
-                //             mRoundabout.mRoad[approaches[i].mIndex + k - j] =
-                //                 approaches[i].mRoad[k];
-                //         }
-                //     }
-                //     break;
-                // }
+                    // Error in paper
+                    if (space_behind >= meta->mNas && getTypeLength(cell.mType) <= space_ahead) {
+                        for (int k = j; k < approach_length && approaches[i].mRoad[k].mMeta == meta;
+                             k++) {
+                            mRoundabout.mRoad[approaches[i].mIndex + k - j] =
+                                approaches[i].mRoad[k];
+                        }
+                    }
+                }
 
                 // std::cout << "Distance from end: " << approaches[i].distanceFromEnd(j) <<
                 // std::endl;
@@ -343,6 +340,6 @@ class Simulation {
 
 int main() {
     Simulation sim;
-    sim.run(30);
+    sim.run(200);
     return 0;
 }
