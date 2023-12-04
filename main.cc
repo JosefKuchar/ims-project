@@ -233,19 +233,19 @@ class Simulation {
         }
         // Moving vehicles
         for (int i = 0; i < num_approaches; i++) {
-            bool first = true;
+            std::shared_ptr<CellMeta> lastMeta;
             for (int j = 0; j < approach_length; j++) {
                 auto& cell = approaches[i].mRoad[j];
                 if (cell.mType == CellType::Road) {
-                    first = true;
+                    lastMeta = nullptr;
                     continue;
                 }
-                if (!first) {
-                    continue;
-                }
-                first = false;
-
                 auto& meta = cell.mMeta;
+                if (meta == lastMeta) {
+                    continue;
+                }
+                lastMeta = meta;
+
                 auto& speed = meta->mSpeed;
 
                 int gap = approaches[i].freeSpace(j);
@@ -343,6 +343,6 @@ class Simulation {
 
 int main() {
     Simulation sim;
-    sim.run(1000);
+    sim.run(30);
     return 0;
 }
