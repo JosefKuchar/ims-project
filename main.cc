@@ -103,9 +103,9 @@ struct Cell {
     std::shared_ptr<CellMeta> mMeta;
 
    public:
-    Cell(CellType type, CellMeta meta) {
+    Cell(CellType type, std::shared_ptr<CellMeta> meta) {
         mType = type;
-        mMeta = std::make_shared<CellMeta>(meta);
+        mMeta = meta;
     };
     Cell() {
         mType = CellType::Road;
@@ -137,6 +137,16 @@ struct Approach {
         }
         // TODO: possible off by 1
         return approach_length - index;
+    }
+
+    int freeSpaceAtEntry(int vehicle_len) {
+        for (int i = vehicle_len; i < approach_length; i++) {
+            if (mRoad[i].mType != CellType::Road) {
+                return i - vehicle_len;
+            }
+        }
+
+        return approach_length - vehicle_len;
     }
 };
 
@@ -171,17 +181,17 @@ class Simulation {
             auto meta = CellMeta(mNasD, mGen);
             auto vehicle_type = generateType(mGen);
             auto vehicle_length = getTypeLength(vehicle_type);
-            auto free_space = approaches[i].freeSpace(vehicle_length);
+            auto free_space = approaches[i].freeSpaceAtEntry(vehicle_length);
 
             if (meta.mNas > free_space) {
                 continue;
             }
 
+            auto shared_meta = std::make_shared<CellMeta>(meta);
             for (int j = 0; j < vehicle_length; j++) {
-                new_approaches[i].mRoad[j] = Cell(vehicle_type, meta);
+                approaches[i].mRoad[j] = Cell(vehicle_type, shared_meta);
             }
         }
-
         // Moving vehicles
         for (int i = 0; i < num_approaches; i++) {
             bool first = true;
@@ -201,13 +211,13 @@ class Simulation {
                     if (gap < speed) {
                         speed = gap * (2.0 / 3.0);
                     }
-                    // if (speed > 0) {
-                    //     std::uniform_real_distribution<> dis(0, 1);
-                    //     float r = dis(mGen);
-                    //     if (r < pb) {
-                    //         speed -= 1;
-                    //     }
-                    // }
+                    if (speed > 0) {
+                        std::uniform_real_distribution<> dis(0, 1);
+                        float r = dis(mGen);
+                        if (r < pb) {
+                            speed -= 1;
+                        }
+                    }
 
                     first = false;
                 }
@@ -217,7 +227,6 @@ class Simulation {
                     new_approaches[i].mRoad[j] = Cell();
                     continue;
                 }
-
                 new_approaches[i].mRoad[j + speed] = cell;
             }
         }
@@ -249,6 +258,6 @@ class Simulation {
 
 int main() {
     Simulation sim;
-    sim.run(10);
+    sim.run(50);
     return 0;
 }
