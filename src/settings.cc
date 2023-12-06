@@ -72,9 +72,15 @@ int Settings::getInitialSpeed() const {
     return mInitialSpeed;
 }
 
-int Settings::getExitIndex() {
-    // TODO: Proper logic
-    return getRoundaboutLength() / getApproachCount();
+int Settings::getExitIndex(int approachIndex) {
+    auto rn = mUniformDist(mGen);
+    if (rn < 0.33) {
+        return (approachIndex + 1) % mApproachCount;
+    } else if (rn < 0.66) {
+        return (approachIndex + 2) % mApproachCount;
+    } else {
+        return (approachIndex + 3) % mApproachCount;
+    }
 }
 
 int Settings::getRandomNas() {

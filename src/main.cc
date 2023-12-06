@@ -13,6 +13,6 @@
 
 int main() {
     Simulation sim;
-    sim.run(16);
+    sim.run(40);
     return 0;
 }

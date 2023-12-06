@@ -14,12 +14,13 @@ class CellMeta {
     CellType mType;
 
    public:
-    CellMeta(CellType type);
+    CellMeta(CellType type, int approachIndex);
     int getNas() const;
     int getSpeed() const;
     CellType getType() const;
     void setSpeed(int speed);
     int getVehicleLength();
+    int getExitIndex() const;
 };
 
 class Cell {

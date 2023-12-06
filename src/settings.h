@@ -48,7 +48,7 @@ class Settings {
 
     int getRandomNas();
     float getRandomFloat();
-    int getExitIndex();
+    int getExitIndex(int approachIndex);
 
     static Settings& GetInstance();
 };

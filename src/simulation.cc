@@ -14,8 +14,10 @@ Simulation::Simulation() {
 
 void Simulation::update() {
     // Spawning vehicles
+    int i = 0;
     for (auto& a : mIncoming) {
-        a.trySpawnVehicle();
+        a.trySpawnVehicle(i);
+        i++;
     }
 
     // Update vehicles
@@ -36,11 +38,15 @@ void Simulation::print() {
     std::cout << "Incoming:" << std::endl;
     for (auto& inc : mIncoming) {
         inc.print();
-        std::cout << std::endl;
     }
+
+    std::cout << "Outgoing: " << std::endl;
+    for (auto& out : mRoundabout->getOutgoing()) {
+        out.print();
+    }
+
     std::cout << "Roundabout:" << std::endl;
     mRoundabout->print();
-    std::cout << std::endl;
 }
 
 void Simulation::run(int num_iters) {

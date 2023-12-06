@@ -86,9 +86,9 @@ CellType generateType() {
     }
 }
 
-void Approach::trySpawnVehicle() {
+void Approach::trySpawnVehicle(int approachIndex) {
     auto vehicleType = generateType();
-    auto meta = std::make_shared<CellMeta>(CellMeta(vehicleType));
+    auto meta = std::make_shared<CellMeta>(CellMeta(vehicleType, approachIndex));
     auto vehicleLength = meta->getVehicleLength();
     auto freeSpace = getFreeSpace(0);
 
@@ -99,14 +99,4 @@ void Approach::trySpawnVehicle() {
     for (int j = 0; j < vehicleLength; j++) {
         mRoad[j] = Cell(meta);
     }
-}
-
-int Approach::getFreeSpace(int index) {
-    for (int i = index; i < mRoad.size(); i++) {
-        if (mRoad[i].getType() != CellType::Road) {
-            return i - index;
-        }
-    }
-    // TODO: possible off by 1
-    return mRoad.size() - index;
 }

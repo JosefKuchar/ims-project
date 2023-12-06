@@ -13,6 +13,7 @@ class Road {
     void print();
     void update();
     void applyUpdate();
+    int getFreeSpace(int index);
     int getDistanceToEnd(int index);
     int getFreeSpaceAfter(int startIndex);
 };

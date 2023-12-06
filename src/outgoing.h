@@ -9,4 +9,5 @@ class Outgoing : public Road {
    public:
     Outgoing(int joinIndex);
     bool trySpawnVehicle(std::shared_ptr<CellMeta> meta);
+    int getJoinIndex() const;
 };

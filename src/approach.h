@@ -10,7 +10,6 @@ class Approach : public Road {
 
    public:
     Approach(int joinIndex, std::shared_ptr<Roundabout> roundabout);
-    void trySpawnVehicle();
+    void trySpawnVehicle(int approachIndex);
     void update();
-    int getFreeSpace(int startIndex);
 };

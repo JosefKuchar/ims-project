@@ -10,7 +10,11 @@ class Roundabout : public Road {
    public:
     Roundabout();
     void update();
+    void applyUpdate();
     int getSpaceAhead(int index);
     int getSpaceBehind(int index);
+    int getDistanceToEnd(int index);
+    int getFreeSpaceAfter(int index);
     bool trySpawnVehicle(std::shared_ptr<CellMeta> meta, int joinIndex);
+    std::vector<Outgoing>& getOutgoing();
 };

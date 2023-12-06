@@ -19,12 +19,12 @@ CellType Cell::getType() {
     return mType;
 }
 
-CellMeta::CellMeta(CellType type) {
+CellMeta::CellMeta(CellType type, int approachIndex) {
     auto& s = Settings::GetInstance();
 
     mSpeed = s.getInitialSpeed();
     mNas = s.getRandomNas();
-    mExitIndex = s.getExitIndex();
+    mExitIndex = s.getExitIndex(approachIndex);
     mType = type;
 }
 
@@ -38,6 +38,10 @@ int CellMeta::getSpeed() const {
 
 CellType CellMeta::getType() const {
     return mType;
+}
+
+int CellMeta::getExitIndex() const {
+    return mExitIndex;
 }
 
 void CellMeta::setSpeed(int speed) {

@@ -57,7 +57,7 @@ void Road::update() {
             }
         }
 
-        if (meta->getSpeed() > getDistanceToEnd(i)) {
+        if (meta->getSpeed() > getDistanceToEnd(i) || getDistanceToEnd(i) == 0) {
             // This will not update the car so the car will disappear
             continue;
         }
@@ -85,6 +85,16 @@ int Road::getFreeSpaceAfter(int index) {
             index++;
         }
     }
+    for (int i = index; i < mRoad.size(); i++) {
+        if (mRoad[i].getType() != CellType::Road) {
+            return i - index;
+        }
+    }
+    // TODO: possible off by 1
+    return mRoad.size() - index;
+}
+
+int Road::getFreeSpace(int index) {
     for (int i = index; i < mRoad.size(); i++) {
         if (mRoad[i].getType() != CellType::Road) {
             return i - index;

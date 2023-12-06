@@ -6,4 +6,18 @@ Outgoing::Outgoing(int joinIndex) : mJoinIndex(joinIndex) {
     mNextRoad = std::vector<Cell>(s.getApproachLength());
 };
 
-bool Outgoing::trySpawnVehicle(std::shared_ptr<CellMeta> meta){};
+bool Outgoing::trySpawnVehicle(std::shared_ptr<CellMeta> meta) {
+    auto vehicleLength = meta->getVehicleLength();
+    auto freeSpace = getFreeSpace(0);
+    if (meta->getNas() + vehicleLength > freeSpace) {
+        return false;
+    }
+    for (int j = 0; j < vehicleLength; j++) {
+        mRoad[j] = Cell(meta);
+    }
+    return true;
+}
+
+int Outgoing::getJoinIndex() const {
+    return mJoinIndex;
+}
