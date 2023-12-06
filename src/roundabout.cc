@@ -7,7 +7,9 @@ Roundabout::Roundabout() {
     auto& s = Settings::GetInstance();
     mRoad = std::vector<Cell>(s.getRoundaboutLength());
     mNextRoad = std::vector<Cell>(s.getRoundaboutLength());
-    mOutgoing = std::vector<Road>(s.getApproachCount());
+    for (int i = 0; i < s.getApproachCount(); i++) {
+        mOutgoing.push_back(Outgoing((s.getRoundaboutLength() / s.getApproachCount()) * i));
+    };
 }
 
 int Roundabout::getSpaceAhead(int index) {

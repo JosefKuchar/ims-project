@@ -1,10 +1,11 @@
 #pragma once
 
+#include "outgoing.h"
 #include "road.h"
 
 class Roundabout : public Road {
    private:
-    std::vector<Road> mOutgoing;
+    std::vector<Outgoing> mOutgoing;
 
    public:
     Roundabout();
