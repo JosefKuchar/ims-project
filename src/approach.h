@@ -13,6 +13,4 @@ class Approach : public Road {
     void trySpawnVehicle();
     void update();
     int getFreeSpace(int startIndex);
-    int getFreeSpaceAfter(int startIndex);
-    int getDistanceToEnd(int startIndex);
 };

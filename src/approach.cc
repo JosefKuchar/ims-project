@@ -11,23 +11,6 @@ Approach::Approach(int joinIndex, std::shared_ptr<Roundabout> roundabout) {
     mRoundabout = roundabout;
 }
 
-int getTypeLength(CellType type) {
-    switch (type) {
-        case CellType::Motorcycle:
-            return 3;
-        case CellType::PersonalVehicle:
-            return 5;
-        case CellType::Van:
-            return 7;
-        case CellType::Bus:
-            return 10;
-        case CellType::OtherLarge:
-            return 13;
-        default:
-            throw std::runtime_error("Unreachable");
-    }
-}
-
 void Approach::update() {
     auto& s = Settings::GetInstance();
     auto lastMeta = std::shared_ptr<CellMeta>(nullptr);
@@ -69,15 +52,9 @@ void Approach::update() {
         // FIXME Move this to roundabout logic
         // If we are at the end of the approach
         if (getDistanceToEnd(i) == 0) {
-            auto spaceBehind = mRoundabout->getSpaceBehind(mJoinIndex);
-            auto spaceAhead = mRoundabout->getSpaceAhead(mJoinIndex);
-
-            // Error in paper
-            if (spaceBehind >= meta->getNas() && getTypeLength(cell.getType()) <= spaceAhead) {
-                std::cout << "TODO Move to roundabout" << std::endl;
-                // for (int k = j; k < mRoad.size() && mRoad[k].getMeta() == meta; k++) {
-                //     mRoundabout->mRoad[mIndex + k - j] = mRoad[k];
-                // }
+            if (mRoundabout->trySpawnVehicle(meta, mJoinIndex)) {
+                // Car dissapears from this road
+                continue;
             }
         }
 
@@ -110,9 +87,9 @@ CellType generateType() {
 }
 
 void Approach::trySpawnVehicle() {
-    auto meta = std::make_shared<CellMeta>(CellMeta());
     auto vehicleType = generateType();
-    auto vehicleLength = getTypeLength(vehicleType);
+    auto meta = std::make_shared<CellMeta>(CellMeta(vehicleType));
+    auto vehicleLength = meta->getVehicleLength();
     auto freeSpace = getFreeSpace(0);
 
     if (meta->getNas() + vehicleLength > freeSpace) {
@@ -120,7 +97,7 @@ void Approach::trySpawnVehicle() {
     }
 
     for (int j = 0; j < vehicleLength; j++) {
-        mRoad[j] = Cell(vehicleType, meta);
+        mRoad[j] = Cell(meta);
     }
 }
 
@@ -132,29 +109,4 @@ int Approach::getFreeSpace(int index) {
     }
     // TODO: possible off by 1
     return mRoad.size() - index;
-}
-
-int Approach::getFreeSpaceAfter(int index) {
-    auto meta = mRoad[index].getMeta();
-    if (meta != nullptr) {
-        while (index < mRoad.size() && mRoad[index].getMeta() == meta) {
-            index++;
-        }
-    }
-    for (int i = index; i < mRoad.size(); i++) {
-        if (mRoad[i].getType() != CellType::Road) {
-            return i - index;
-        }
-    }
-    // TODO: possible off by 1
-    return mRoad.size() - index;
-}
-
-int Approach::getDistanceToEnd(int index) {
-    auto meta = mRoad[index].getMeta();
-    int j = 0;
-    while (index + j < mRoad.size() && meta == mRoad[index + j].getMeta()) {
-        j++;
-    }
-    return mRoad.size() - (index + j);
 }

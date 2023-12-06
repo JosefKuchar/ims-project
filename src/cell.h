@@ -10,12 +10,16 @@ class CellMeta {
    private:
     int mNas;
     int mSpeed;  // cells/second
+    int mExitIndex;
+    CellType mType;
 
    public:
-    CellMeta();
+    CellMeta(CellType type);
     int getNas() const;
     int getSpeed() const;
+    CellType getType() const;
     void setSpeed(int speed);
+    int getVehicleLength();
 };
 
 class Cell {
@@ -24,7 +28,7 @@ class Cell {
     std::shared_ptr<CellMeta> mMeta;
 
    public:
-    Cell(CellType type, std::shared_ptr<CellMeta> meta);
+    Cell(std::shared_ptr<CellMeta> meta);
     Cell();
     void print();
     CellType getType();

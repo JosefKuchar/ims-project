@@ -7,8 +7,7 @@
 
 class Simulation {
     std::vector<Approach> mIncoming;
-    std::vector<Approach> mOutgoing;
-    Roundabout mRoundabout;
+    std::shared_ptr<Roundabout> mRoundabout;
 
    public:
     Simulation();

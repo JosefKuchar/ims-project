@@ -12,7 +12,7 @@ Settings::Settings() {
     mNasDeviation = 2;
     mApproachCount = 4;
     mApproachLength = 100;
-    mRoundaboutLength = 12 * 2 * 3.14;
+    mRoundaboutLength = 15 * 2 * 3.14;
     mInitialSpeed = 14;
     mMotorcycleP = 0.02;
     mCarP = 0.78;
@@ -70,6 +70,11 @@ float Settings::getBusP() const {
 
 int Settings::getInitialSpeed() const {
     return mInitialSpeed;
+}
+
+int Settings::getExitIndex() {
+    // TODO: Proper logic
+    return getRoundaboutLength() / getApproachCount();
 }
 
 int Settings::getRandomNas() {

@@ -11,5 +11,8 @@ class Road {
    public:
     Road();
     void print();
+    void update();
     void applyUpdate();
+    int getDistanceToEnd(int index);
+    int getFreeSpaceAfter(int startIndex);
 };

@@ -5,13 +5,10 @@
 
 Simulation::Simulation() {
     auto& s = Settings::GetInstance();
-    mRoundabout = Roundabout();
-    std::shared_ptr<Roundabout> roundabout = std::make_shared<Roundabout>(mRoundabout);
+    mRoundabout = std::make_shared<Roundabout>(Roundabout());
     for (int i = 0; i < s.getApproachCount(); i++) {
         mIncoming.push_back(
-            Approach((s.getApproachLength() / s.getApproachCount()) * i, roundabout));
-        mOutgoing.push_back(
-            Approach((s.getApproachLength() / s.getApproachCount()) * i, roundabout));
+            Approach((s.getRoundaboutLength() / s.getApproachCount()) * i + 1, mRoundabout));
     };
 }
 
@@ -25,16 +22,14 @@ void Simulation::update() {
     for (auto& a : mIncoming) {
         a.update();
     }
+    mRoundabout->update();
 
     // TODO: Update roundabout
     // Update roads
     for (auto& a : mIncoming) {
         a.applyUpdate();
     }
-    for (auto& a : mOutgoing) {
-        a.applyUpdate();
-    }
-    mRoundabout.applyUpdate();
+    mRoundabout->applyUpdate();
 }
 
 void Simulation::print() {
@@ -43,13 +38,8 @@ void Simulation::print() {
         inc.print();
         std::cout << std::endl;
     }
-    std::cout << "Outgoing:" << std::endl;
-    for (auto& out : mOutgoing) {
-        out.print();
-        std::cout << std::endl;
-    }
     std::cout << "Roundabout:" << std::endl;
-    mRoundabout.print();
+    mRoundabout->print();
     std::cout << std::endl;
 }
 

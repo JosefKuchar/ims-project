@@ -6,8 +6,8 @@ Cell::Cell() {
     mMeta = nullptr;
 };
 
-Cell::Cell(CellType type, std::shared_ptr<CellMeta> meta) {
-    mType = type;
+Cell::Cell(std::shared_ptr<CellMeta> meta) {
+    mType = meta->getType();
     mMeta = meta;
 };
 
@@ -19,11 +19,13 @@ CellType Cell::getType() {
     return mType;
 }
 
-CellMeta::CellMeta() {
+CellMeta::CellMeta(CellType type) {
     auto& s = Settings::GetInstance();
 
     mSpeed = s.getInitialSpeed();
     mNas = s.getRandomNas();
+    mExitIndex = s.getExitIndex();
+    mType = type;
 }
 
 int CellMeta::getNas() const {
@@ -34,8 +36,29 @@ int CellMeta::getSpeed() const {
     return mSpeed;
 }
 
+CellType CellMeta::getType() const {
+    return mType;
+}
+
 void CellMeta::setSpeed(int speed) {
     mSpeed = speed;
+}
+
+int CellMeta::getVehicleLength() {
+    switch (mType) {
+        case CellType::Motorcycle:
+            return 3;
+        case CellType::PersonalVehicle:
+            return 5;
+        case CellType::Van:
+            return 7;
+        case CellType::Bus:
+            return 10;
+        case CellType::OtherLarge:
+            return 13;
+        default:
+            throw std::runtime_error("Unreachable");
+    }
 }
 
 void Cell::print() {

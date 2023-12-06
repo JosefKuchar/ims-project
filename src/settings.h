@@ -48,6 +48,7 @@ class Settings {
 
     int getRandomNas();
     float getRandomFloat();
+    int getExitIndex();
 
     static Settings& GetInstance();
 };
