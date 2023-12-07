@@ -58,6 +58,7 @@ void Road::update() {
         }
 
         if (meta->getSpeed() > getDistanceToEnd(i) || getDistanceToEnd(i) == 0) {
+            s.vehicleCount++;
             // This will not update the car so the car will disappear
             continue;
         }

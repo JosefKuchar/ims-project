@@ -13,6 +13,8 @@
 
 int main() {
     Simulation sim;
-    sim.run(40);
+    sim.run(3600);
+    auto& s = Settings::GetInstance();
+    std::cout << s.vehicleCount << std::endl;
     return 0;
 }

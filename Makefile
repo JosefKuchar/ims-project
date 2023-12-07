@@ -9,7 +9,7 @@ OBJS := $(SRCS:src/%.cc=obj/%.o)
 DEPS := $(SRCS:src/%.cc=obj/%.d)
 
 # These will run every time (not just when the files are newer)
-.PHONY: run clean
+.PHONY: run clean doc
 
 all: obj model
 
@@ -26,7 +26,10 @@ obj:
 	mkdir -p obj
 
 clean:
-	rm -rf obj
+	rm -rf obj doc.pdf model
 
 run: model
 	./model
+
+doc:
+	pandoc --natbib --pdf-engine=latexmk -V lang=cs -V linkcolor=blue -V urlcolor=blue -V block-headings -N doc/doc.md -o doc.pdf

@@ -15,10 +15,10 @@ class Settings {
     int mApproachLength;
     int mRoundaboutLength;
     int mInitialSpeed;
-    float mMotorcycleP = 0.02;
-    float mCarP = 0.78;
-    float mVanP = 0.11;
-    float mBusP = 0.06;
+    float mMotorcycleP;
+    float mCarP;
+    float mVanP;
+    float mBusP;
 
     std::random_device mRd;
     std::mt19937 mGen;
@@ -51,4 +51,6 @@ class Settings {
     int getExitIndex(int approachIndex);
 
     static Settings& GetInstance();
+
+    int vehicleCount = 0;
 };

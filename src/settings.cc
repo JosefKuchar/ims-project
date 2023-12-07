@@ -12,8 +12,8 @@ Settings::Settings() {
     mNasDeviation = 2;
     mApproachCount = 4;
     mApproachLength = 100;
-    mRoundaboutLength = 15 * 2 * 3.14;
-    mInitialSpeed = 14;
+    mRoundaboutLength = 35 * 3.14;
+    mInitialSpeed = 16;
     mMotorcycleP = 0.02;
     mCarP = 0.78;
     mVanP = 0.11;
@@ -74,9 +74,11 @@ int Settings::getInitialSpeed() const {
 
 int Settings::getExitIndex(int approachIndex) {
     auto rn = mUniformDist(mGen);
+    return (approachIndex + 1) % mApproachCount;
+    // return (approachIndex + 3) % mApproachCount;
     if (rn < 0.33) {
         return (approachIndex + 1) % mApproachCount;
-    } else if (rn < 0.66) {
+    } else if (rn < 0.33) {
         return (approachIndex + 2) % mApproachCount;
     } else {
         return (approachIndex + 3) % mApproachCount;
