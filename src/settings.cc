@@ -148,15 +148,13 @@ void Settings::setLogFile(std::string path) {
 
 int Settings::getExitIndex(int approachIndex) {
     auto rn = mUniformDist(mGen);
-    return (approachIndex + 1) % mApproachCount;
-    // return (approachIndex + 3) % mApproachCount;
-    if (rn < 0.33) {
-        return (approachIndex + 1) % mApproachCount;
-    } else if (rn < 0.33) {
-        return (approachIndex + 2) % mApproachCount;
-    } else {
-        return (approachIndex + 3) % mApproachCount;
+    float laneP = 1.0 / (mApproachCount - 1);
+    for (int i = 1; i < mApproachCount; i++) {
+        if (rn < laneP * i) {
+            return (approachIndex + i) % mApproachCount;
+        }
     }
+    return (approachIndex + mApproachCount - 1) % mApproachCount;
 }
 
 int Settings::getRandomNas() {
