@@ -12,7 +12,7 @@ Settings::Settings() {
     mNasDeviation = 2;
     mApproachCount = 4;
     mApproachLength = 100;
-    mRoundaboutLength = 35 * 3.14;
+    mRoundaboutLength = 30 * 3.14;
     mInitialSpeed = 16;
     mMotorcycleP = 0.02;
     mCarP = 0.78;
