@@ -11,8 +11,15 @@ smyslem experimentů je demonstrovat, že pokud by ..., pak by ...
 
 ## Kdo se na práci podílel
 
+### Autoři
+
 - Josef Kuchař (xkucha28)
 - Matej Sirovatka (xsirov00)
+
+### Literatura
+
+- https://web.archive.org/web/20060221103353/http://www.rpi.edu/dept/cits/files/ops.ppt
+- https://pdodds.w3.uvm.edu/teaching/courses/2009-08UVM-300/docs/others/2005/wang2005a.pdf
 
 ## V jakém prostředí a za jakých podmínek probíhalo experimentální ověřování validity modelu
 
