@@ -9,7 +9,7 @@ Outgoing::Outgoing(int joinIndex) : mJoinIndex(joinIndex) {
 bool Outgoing::trySpawnVehicle(std::shared_ptr<CellMeta> meta) {
     auto vehicleLength = meta->getVehicleLength();
     auto freeSpace = getFreeSpace(0);
-    if (meta->getNas() + vehicleLength > freeSpace) {
+    if (vehicleLength > freeSpace) {
         return false;
     }
     for (int j = 0; j < vehicleLength; j++) {

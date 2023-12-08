@@ -12,6 +12,28 @@ Roundabout::Roundabout() {
     };
 }
 
+void Roundabout::print() {
+    for (int i = 0; i < mRoad.size(); i++) {
+        bool found = false;
+        for (int j = 0; j < mOutgoing.size(); j++) {
+            if (mOutgoing[j].getJoinIndex() == i) {
+                std::cout << "^";
+                found = true;
+                break;
+            } else if (mOutgoing[j].getJoinIndex() + 1 == i) {
+                std::cout << "v";
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            std::cout << " ";
+        }
+    }
+    std::cout << std::endl;
+    Road::print();
+}
+
 int Roundabout::getSpaceAhead(int index) {
     for (size_t i = index; i < mRoad.size(); i++) {
         if (mRoad[i].getType() != CellType::Road) {
@@ -85,26 +107,24 @@ void Roundabout::update() {
         lastMeta = meta;
         int gap = getFreeSpaceAfter(i);
 
-        if (gap < meta->getSpeed()) {
-            meta->setSpeed(gap * (2.0 / 3.0));
-        } else {
-            // TODO: Hack
+        if (meta->getSpeed() < 2) {
+            meta->setSpeed(meta->getSpeed() + 1);
+        } else if (meta->getSpeed() < 14) {
             meta->setSpeed(meta->getSpeed() + 2);
-            if (meta->getSpeed() > 14) {
-                meta->setSpeed(14);
+        } else {
+            const float r = s.getRandomFloat();
+            if (r < 0.3) {
+                meta->setSpeed(meta->getSpeed() + 1);
+            } else if (r < 0.6) {
+                meta->setSpeed(meta->getSpeed() - 1);
             }
-            // Hack 2
-            gap = getFreeSpaceAfter(i);
-            if (gap < meta->getSpeed()) {
-                meta->setSpeed(gap);
+            if (meta->getSpeed() > 16) {
+                meta->setSpeed(16);
             }
         }
 
-        if (meta->getSpeed() > 0) {
-            // TODO use settings prob
-            if (s.getRandomFloat() < 0.3) {
-                meta->setSpeed(meta->getSpeed() - 1);
-            }
+        if (gap < meta->getSpeed()) {
+            meta->setSpeed(gap * (2.0 / 3.0));
         }
 
         // FIXME Move this to roundabout logic
@@ -133,11 +153,13 @@ void Roundabout::update() {
 }
 
 bool Roundabout::trySpawnVehicle(std::shared_ptr<CellMeta> meta, int joinIndex) {
+    auto& s = Settings::GetInstance();
     auto spaceBehind = getSpaceBehind(joinIndex);
     auto spaceAhead = getSpaceAhead(joinIndex);
     auto vehicleLength = meta->getVehicleLength();
 
-    if (spaceBehind >= meta->getNas() && vehicleLength <= spaceAhead) {
+    if ((spaceBehind >= meta->getNas() || s.getRandomFloat() < 0.35) &&
+        vehicleLength <= spaceAhead) {
         for (size_t i = 0; i < (size_t)vehicleLength; i++) {
             mRoad[joinIndex + i] = Cell(meta);
         }

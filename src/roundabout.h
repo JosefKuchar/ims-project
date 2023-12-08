@@ -10,6 +10,7 @@ class Roundabout : public Road {
    public:
     Roundabout();
     void update();
+    void print();
     void applyUpdate();
     int getSpaceAhead(int index);
     int getSpaceBehind(int index);

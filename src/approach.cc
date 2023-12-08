@@ -27,29 +27,26 @@ void Approach::update() {
         lastMeta = meta;
         int gap = getFreeSpaceAfter(i);
 
-        if (gap < meta->getSpeed()) {
-            meta->setSpeed(gap * (2.0 / 3.0));
-        } else {
-            // TODO: Hack
+        if (meta->getSpeed() < 2) {
+            meta->setSpeed(meta->getSpeed() + 1);
+        } else if (meta->getSpeed() < 14) {
             meta->setSpeed(meta->getSpeed() + 2);
-            if (meta->getSpeed() > 14) {
-                meta->setSpeed(14);
-            }
-            // Hack 2
-            gap = getFreeSpaceAfter(i);
-            if (gap < meta->getSpeed()) {
-                meta->setSpeed(gap);
-            }
-        }
-
-        if (meta->getSpeed() > 0) {
-            // TODO use settings prob
-            if (s.getRandomFloat() < 0.1) {
+        } else {
+            const float r = s.getRandomFloat();
+            if (r < 0.3) {
+                meta->setSpeed(meta->getSpeed() + 1);
+            } else if (r < 0.6) {
                 meta->setSpeed(meta->getSpeed() - 1);
             }
+            if (meta->getSpeed() > 16) {
+                meta->setSpeed(16);
+            }
         }
 
-        // FIXME Move this to roundabout logic
+        if (gap < meta->getSpeed()) {
+            meta->setSpeed(gap * (2.0 / 3.0));
+        }
+
         // If we are at the end of the approach
         if (getDistanceToEnd(i) == 0) {
             meta->newNas();
