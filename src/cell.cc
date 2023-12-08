@@ -28,6 +28,11 @@ CellMeta::CellMeta(CellType type, int approachIndex) {
     mType = type;
 }
 
+void CellMeta::newNas() {
+    auto& s = Settings::GetInstance();
+    mNas = s.getRandomNas();
+}
+
 int CellMeta::getNas() const {
     return mNas;
 }

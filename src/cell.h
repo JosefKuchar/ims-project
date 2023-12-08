@@ -22,6 +22,7 @@ class CellMeta {
     int getVehicleLength();
     float getVehiclePcu();
     int getExitIndex() const;
+    void newNas();
 };
 
 class Cell {

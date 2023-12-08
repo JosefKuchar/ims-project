@@ -44,7 +44,7 @@ void Approach::update() {
 
         if (meta->getSpeed() > 0) {
             // TODO use settings prob
-            if (s.getRandomFloat() < 0.3) {
+            if (s.getRandomFloat() < 0.1) {
                 meta->setSpeed(meta->getSpeed() - 1);
             }
         }
@@ -52,6 +52,7 @@ void Approach::update() {
         // FIXME Move this to roundabout logic
         // If we are at the end of the approach
         if (getDistanceToEnd(i) == 0) {
+            meta->newNas();
             if (mRoundabout->trySpawnVehicle(meta, mJoinIndex)) {
                 // Car dissapears from this road
                 continue;
