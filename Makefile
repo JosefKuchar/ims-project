@@ -26,10 +26,13 @@ obj:
 	mkdir -p obj
 
 clean:
-	rm -rf obj doc.pdf model
+	rm -rf obj doc.pdf model *.zip
 
 run: model
 	./model
 
 doc:
 	pandoc --natbib --pdf-engine=latexmk -V lang=cs -V linkcolor=blue -V urlcolor=blue -V block-headings -N doc/doc.md -o doc.pdf
+
+zip:
+	zip -r 08_xkucha28_xsirov00.zip doc.pdf src Makefile README.md

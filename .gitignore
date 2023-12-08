@@ -34,3 +34,6 @@ model
 
 # Logs
 *.csv
+
+# Zip
+*.zip
