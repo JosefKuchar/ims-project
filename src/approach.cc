@@ -14,7 +14,7 @@ Approach::Approach(int joinIndex, std::shared_ptr<Roundabout> roundabout) {
 void Approach::update() {
     auto& s = Settings::GetInstance();
     auto lastMeta = std::shared_ptr<CellMeta>(nullptr);
-    for (int i = 0; i < mRoad.size(); i++) {
+    for (size_t i = 0; i < mRoad.size(); i++) {
         auto& cell = mRoad[i];
         if (cell.getType() == CellType::Road) {
             lastMeta = nullptr;
@@ -63,7 +63,7 @@ void Approach::update() {
         }
 
         // Update car
-        for (int j = i; j < mRoad.size() && mRoad[j].getMeta() == meta; j++) {
+        for (size_t j = i; j < mRoad.size() && mRoad[j].getMeta() == meta; j++) {
             mNextRoad[j + meta->getSpeed()] = mRoad[j];
         }
     }

@@ -149,7 +149,7 @@ Args::Args(int argc, char** argv) {
 void Args::printHelp() {
     std::cout << "Usage: ./model [options]" << std::endl;
     std::cout << "Options:" << std::endl;
-    for (int i = 0; i < sizeof(options) / sizeof(struct option) - 1; i++) {
+    for (size_t i = 0; i < sizeof(options) / sizeof(struct option) - 1; i++) {
         std::cout << "  --" << options[i].name << " (-" << (char)options[i].val << ") "
                   << argDesc[i] << std::endl;
     }

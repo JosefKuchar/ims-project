@@ -13,7 +13,7 @@ void Road::print() {
 
 void Road::applyUpdate() {
     // Copy the next road to the current road
-    for (int i = 0; i < mRoad.size(); i++) {
+    for (size_t i = 0; i < mRoad.size(); i++) {
         mRoad[i] = mNextRoad[i];
     }
     // Set the next road to be empty
@@ -24,7 +24,7 @@ void Road::update() {
     auto& s = Settings::GetInstance();
     auto& stats = Statistics::GetInstance();
     auto lastMeta = std::shared_ptr<CellMeta>(nullptr);
-    for (int i = 0; i < mRoad.size(); i++) {
+    for (size_t i = 0; i < mRoad.size(); i++) {
         auto& cell = mRoad[i];
         if (cell.getType() == CellType::Road) {
             lastMeta = nullptr;
@@ -66,7 +66,7 @@ void Road::update() {
         }
 
         // Update car
-        for (int j = i; j < mRoad.size() && mRoad[j].getMeta() == meta; j++) {
+        for (size_t j = i; j < mRoad.size() && mRoad[j].getMeta() == meta; j++) {
             mNextRoad[j + meta->getSpeed()] = mRoad[j];
         }
     }
@@ -75,7 +75,7 @@ void Road::update() {
 int Road::getDistanceToEnd(int index) {
     auto meta = mRoad[index].getMeta();
     int j = 0;
-    while (index + j < mRoad.size() && meta == mRoad[index + j].getMeta()) {
+    while ((size_t)(index + j) < mRoad.size() && meta == mRoad[index + j].getMeta()) {
         j++;
     }
     return mRoad.size() - (index + j);
@@ -84,11 +84,11 @@ int Road::getDistanceToEnd(int index) {
 int Road::getFreeSpaceAfter(int index) {
     auto meta = mRoad[index].getMeta();
     if (meta != nullptr) {
-        while (index < mRoad.size() && mRoad[index].getMeta() == meta) {
+        while ((size_t)index < mRoad.size() && mRoad[index].getMeta() == meta) {
             index++;
         }
     }
-    for (int i = index; i < mRoad.size(); i++) {
+    for (size_t i = index; i < mRoad.size(); i++) {
         if (mRoad[i].getType() != CellType::Road) {
             return i - index;
         }
@@ -98,7 +98,7 @@ int Road::getFreeSpaceAfter(int index) {
 }
 
 int Road::getFreeSpace(int index) {
-    for (int i = index; i < mRoad.size(); i++) {
+    for (size_t i = index; i < mRoad.size(); i++) {
         if (mRoad[i].getType() != CellType::Road) {
             return i - index;
         }

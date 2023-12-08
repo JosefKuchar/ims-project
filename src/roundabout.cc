@@ -13,7 +13,7 @@ Roundabout::Roundabout() {
 }
 
 int Roundabout::getSpaceAhead(int index) {
-    for (int i = index; i < mRoad.size(); i++) {
+    for (size_t i = index; i < mRoad.size(); i++) {
         if (mRoad[i].getType() != CellType::Road) {
             return i - index;
         }
@@ -31,8 +31,8 @@ int Roundabout::getDistanceToEnd(int index) {
         }
     }
     int outgoingIndex = mOutgoing[meta->getExitIndex()].getJoinIndex();
-    for (int i = index;; i++, i %= mRoad.size()) {
-        if (i == outgoingIndex) {
+    for (size_t i = index;; i++, i %= mRoad.size()) {
+        if (i == (size_t)outgoingIndex) {
             return distance;
         }
         distance++;
@@ -42,7 +42,7 @@ int Roundabout::getDistanceToEnd(int index) {
 int Roundabout::getSpaceBehind(int index) {
     int total = 0;
 
-    while (total < mRoad.size()) {
+    while ((size_t)total < mRoad.size()) {
         if (mRoad[index].getType() != CellType::Road) {
             return total;
         }
@@ -60,7 +60,7 @@ void Roundabout::update() {
     auto& s = Settings::GetInstance();
     auto lastMeta = mRoad[0].getMeta();
     int offset = 0;
-    for (int i = 0; i < mRoad.size(); i++) {
+    for (size_t i = 0; i < mRoad.size(); i++) {
         if (mRoad[i].getMeta() == nullptr) {
             break;
         }
@@ -71,7 +71,7 @@ void Roundabout::update() {
         lastMeta = mRoad[i].getMeta();
     }
     lastMeta = nullptr;
-    for (int k = 0; k < mRoad.size(); k++) {
+    for (size_t k = 0; k < mRoad.size(); k++) {
         int i = (k + offset) % mRoad.size();
         auto& cell = mRoad[i];
         if (cell.getType() == CellType::Road) {
@@ -121,7 +121,7 @@ void Roundabout::update() {
         }
 
         // Update car
-        for (int j = i; mRoad[j].getMeta() == meta; j++, j %= mRoad.size()) {
+        for (size_t j = i; mRoad[j].getMeta() == meta; j++, j %= mRoad.size()) {
             mNextRoad[(j + meta->getSpeed()) % mRoad.size()] = mRoad[j % mRoad.size()];
         }
     }
@@ -138,7 +138,7 @@ bool Roundabout::trySpawnVehicle(std::shared_ptr<CellMeta> meta, int joinIndex) 
     auto vehicleLength = meta->getVehicleLength();
 
     if (spaceBehind >= meta->getNas() && vehicleLength <= spaceAhead) {
-        for (int i = 0; i < vehicleLength; i++) {
+        for (size_t i = 0; i < (size_t)vehicleLength; i++) {
             mRoad[joinIndex + i] = Cell(meta);
         }
         return true;
@@ -156,7 +156,7 @@ int Roundabout::getFreeSpaceAfter(int index) {
         }
     }
     int total = 0;
-    for (int i = 0; i < mRoad.size(); i++) {
+    for (size_t i = 0; i < mRoad.size(); i++) {
         if (mRoad[(i + index) % mRoad.size()].getType() != CellType::Road) {
             break;
         }

@@ -26,7 +26,7 @@ obj:
 	mkdir -p obj
 
 clean:
-	rm -rf obj doc.pdf model *.zip
+	rm -rf obj model *.zip
 
 run: model
 	./model

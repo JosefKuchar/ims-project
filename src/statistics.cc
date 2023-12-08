@@ -5,7 +5,9 @@ Statistics& Statistics::GetInstance() {
     return instance;
 };
 
-Statistics::Statistics() : mVehicleCount(0), mPcu(0.0) {
+Statistics::Statistics() {
+    mVehicleCount = 0;
+    mPcu = 0;
     mLogFilePath = std::filesystem::path("log.csv");
 }
 
