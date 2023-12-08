@@ -1,5 +1,6 @@
 #include "road.h"
 #include <iostream>
+#include "statistics.h"
 
 Road::Road(){};
 
@@ -21,6 +22,7 @@ void Road::applyUpdate() {
 
 void Road::update() {
     auto& s = Settings::GetInstance();
+    auto& stats = Statistics::GetInstance();
     auto lastMeta = std::shared_ptr<CellMeta>(nullptr);
     for (int i = 0; i < mRoad.size(); i++) {
         auto& cell = mRoad[i];
@@ -58,7 +60,7 @@ void Road::update() {
         }
 
         if (meta->getSpeed() > getDistanceToEnd(i) || getDistanceToEnd(i) == 0) {
-            s.vehicleCount++;
+            stats.addVehicle(meta);
             // This will not update the car so the car will disappear
             continue;
         }

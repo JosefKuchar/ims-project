@@ -1,0 +1,154 @@
+#include "args.h"
+#include <getopt.h>
+#include <iostream>
+#include <string>
+#include "settings.h"
+
+enum class Arg {
+    MinNas = 'a',
+    MaxNas = 'b',
+    MeanNas = 'c',
+    DeviationNas = 'd',
+    ApproachCount = 'e',
+    ApproachLength = 'l',
+    RoundaboutDiameter = 'r',
+    InitialSpeed = 's',
+    MotorcycleP = 'i',
+    CarP = 'j',
+    VanP = 'k',
+    BusP = 'q',
+    Epochs = 'm',
+    LogFile = 'n',
+    Help = 'h',
+    Verbose = 'v'
+};
+
+static struct option options[] = {
+    {"min-nas", required_argument, 0, (char)Arg::MinNas},
+    {"max-nas", required_argument, 0, (char)Arg::MaxNas},
+    {"mean-nas", required_argument, 0, (char)Arg::MeanNas},
+    {"deviation-nas", required_argument, 0, (char)Arg::DeviationNas},
+    {"approach-count", required_argument, 0, (char)Arg::ApproachCount},
+    {"approach-length", required_argument, 0, (char)Arg::ApproachLength},
+    {"roundabout-diameter", required_argument, 0, (char)Arg::RoundaboutDiameter},
+    {"initial-speed", required_argument, 0, (char)Arg::InitialSpeed},
+    {"motorcycle-p", required_argument, 0, (char)Arg::MotorcycleP},
+    {"car-p", required_argument, 0, (char)Arg::CarP},
+    {"van-p", required_argument, 0, (char)Arg::VanP},
+    {"bus-p", required_argument, 0, (char)Arg::BusP},
+    {"epochs", required_argument, 0, (char)Arg::Epochs},
+    {"log-file", required_argument, 0, (char)Arg::LogFile},
+    {"help", no_argument, 0, (char)Arg::Help},
+    {"verbose", no_argument, 0, (char)Arg::Verbose},
+    {0, 0, 0, 0}};
+
+std::string argDesc[] = {"Minimum number of NAS per vehicle",
+                         "Maximum number of NAS per vehicle",
+                         "Mean number of NAS per vehicle",
+                         "Standard deviation of number of NAS per vehicle",
+                         "Number of approaches",
+                         "Length of each approach",
+                         "Diameter of the roundabout",
+                         "Initial speed of vehicles",
+                         "Probability of motorcycle",
+                         "Probability of car",
+                         "Probability of van",
+                         "Probability of bus",
+                         "Number of epochs",
+                         "Path to log file",
+                         "Print help",
+                         "Print verbose (each step of simulation)"};
+
+Args::Args(int argc, char** argv) {
+    auto& s = Settings::GetInstance();
+    try {
+        while (true) {
+            int optIndex = 0;
+            int c = getopt_long(argc, argv, ":a:b:c:d:e:l:r:s:i:j:k:q:m:nhv", options, &optIndex);
+
+            if (c == -1) {
+                break;
+            }
+
+            switch (c) {
+                case (char)Arg::Help:
+                    printHelp();
+                    exit(0);
+                    break;
+                case (char)Arg::Verbose:
+                    s.setVerbose(true);
+                    break;
+                case (char)Arg::MinNas:
+                    s.setMinNas(std::stoi(optarg));
+                    break;
+                case (char)Arg::MaxNas:
+                    s.setMaxNas(std::stoi(optarg));
+                    break;
+                case (char)Arg::MeanNas:
+                    s.setNasMean(std::stoi(optarg));
+                    break;
+                case (char)Arg::DeviationNas:
+                    s.setNasDeviation(std::stoi(optarg));
+                    break;
+                case (char)Arg::ApproachCount:
+                    s.setApproachCount(std::stoi(optarg));
+                    break;
+                case (char)Arg::ApproachLength:
+                    s.setApproachLength(std::stoi(optarg));
+                    break;
+                case (char)Arg::RoundaboutDiameter:
+                    s.setRoundaboutLength(std::stoi(optarg));
+                    break;
+                case (char)Arg::InitialSpeed:
+                    s.setInitialSpeed(std::stoi(optarg));
+                    break;
+                case (char)Arg::MotorcycleP:
+                    s.setMotorcycleP(std::stof(optarg));
+                    break;
+                case (char)Arg::CarP:
+                    s.setCarP(std::stof(optarg));
+                    break;
+                case (char)Arg::VanP:
+                    s.setVanP(std::stof(optarg));
+                    break;
+                case (char)Arg::BusP:
+                    s.setBusP(std::stof(optarg));
+                    break;
+                case (char)Arg::Epochs:
+                    s.setEpochs(std::stoi(optarg));
+                    break;
+                case (char)Arg::LogFile:
+                    s.setLogFile(optarg);
+                    break;
+                case ':':
+                    std::cout << "Missing argument for option " << options[optIndex].name
+                              << std::endl;
+                    printHelp();
+                    exit(1);
+                    break;
+                default:
+                    std::cout << std::endl;
+                    printHelp();
+                    exit(1);
+                    break;
+            }
+        }
+    } catch (std::invalid_argument& e) {
+        std::cout << "Invalid value" << std::endl;
+        printHelp();
+        exit(1);
+    } catch (std::out_of_range& e) {
+        std::cout << "Value out of range" << std::endl;
+        printHelp();
+        exit(1);
+    }
+};
+
+void Args::printHelp() {
+    std::cout << "Usage: ./model [options]" << std::endl;
+    std::cout << "Options:" << std::endl;
+    for (int i = 0; i < sizeof(options) / sizeof(struct option) - 1; i++) {
+        std::cout << "  --" << options[i].name << " (-" << (char)options[i].val << ") "
+                  << argDesc[i] << std::endl;
+    }
+}

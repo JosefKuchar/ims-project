@@ -20,6 +20,7 @@ class CellMeta {
     CellType getType() const;
     void setSpeed(int speed);
     int getVehicleLength();
+    float getVehiclePcu();
     int getExitIndex() const;
 };
 

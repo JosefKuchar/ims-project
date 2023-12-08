@@ -50,9 +50,12 @@ void Simulation::print() {
 }
 
 void Simulation::run(int num_iters) {
+    auto& s = Settings::GetInstance();
     for (int i = 0; i < num_iters; i++) {
         update();
-        print();
-        std::cout << "===========================================" << std::endl;
+        if (s.getVerbose()) {
+            print();
+            std::cout << "===========================================" << std::endl;
+        }
     }
 }
