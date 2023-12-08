@@ -34,5 +34,9 @@ run: model
 doc:
 	pandoc --natbib --pdf-engine=latexmk -V lang=cs -V linkcolor=blue -V urlcolor=blue -V block-headings -N doc/doc.md -o doc.pdf
 
+experiment-diameter: model
+	rm -rf diameter.csv
+	./script/diameter.sh
+
 zip:
 	zip -r 08_xkucha28_xsirov00.zip doc.pdf src Makefile README.md

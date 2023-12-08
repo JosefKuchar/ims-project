@@ -1,4 +1,5 @@
 #include "statistics.h"
+#include "settings.h"
 
 Statistics& Statistics::GetInstance() {
     static Statistics instance;
@@ -25,17 +26,19 @@ void Statistics::addVehicle(std::shared_ptr<CellMeta> cell) {
 }
 
 void Statistics::log() {
+    auto& s = Settings::GetInstance();
     bool exists = std::filesystem::exists(mLogFilePath);
 
     std::ofstream logFile;
     logFile.open(mLogFilePath, std::ios::app);
 
     if (!exists) {
-        logFile << "epochs, vehicle_count, pcu\n";
+        logFile << "epochs,vehicle_count,pcu,diameter\n";
     }
 
-    logFile << std::to_string(mEpochs) << ", " << std::to_string(mVehicleCount) << ", "
-            << std::to_string(mPcu) << "\n";
+    logFile << std::to_string(mEpochs) << "," << std::to_string(mVehicleCount) << ","
+            << std::to_string(mPcu) << "," << std::to_string((int)(s.getRoundaboutLength() / 3.14))
+            << "\n";
 
     logFile.close();
 }
