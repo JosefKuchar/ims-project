@@ -32,7 +32,7 @@ run: model
 	./model
 
 doc:
-	pandoc --natbib --pdf-engine=latexmk -V lang=cs -V linkcolor=blue -V urlcolor=blue -V block-headings -N doc/doc.md -o doc.pdf
+	pandoc -M reference-section-title=Literatura --csl style.csl --bibliography=doc/doc.bib --filter pandoc-citeproc -V lang=cs -V linkcolor=blue -V urlcolor=blue -V block-headings -N doc/doc.md -o doc.pdf
 
 experiment-diameter: model
 	rm -rf diameter.csv
