@@ -31,11 +31,11 @@ V naší práci se zaměřujeme na implementaci celulárního automatu, který j
 
 Cílem našich experimentů je demonstrovat, jak lze prostřednictvím změn v parametrech okružních křižovatek zlepšit jejich kapacitu a propustnost. Takovéto zlepšení je klíčové pro efektivní řízení dopravy, zejména ve městských a předměstských oblastech.
 
-Pro validaci našeho modelu jsme se spolehli na data získaná z akademického článku A Realistic Cellular Automata Model to Simulate Traffic Flow at Urban Roundabouts [@paper]. Tato data poskytují důležité informace o reálném dopravním chování na okružních křižovatkách. Kromě toho jsme jako sekundární zdroj použili data z článku v časopisu Dopravní inženýrství [@inzenyrstvi], což nám umožnilo provést komplexní a vícestrannou analýzu.
+Pro validaci [[@ims] č.s. 37] našeho modelu jsme se spolehli na data získaná z akademického článku A Realistic Cellular Automata Model to Simulate Traffic Flow at Urban Roundabouts [@paper]. Tato data poskytují důležité informace o reálném dopravním chování na okružních křižovatkách. Kromě toho jsme jako sekundární zdroj použili data z článku v časopisu Dopravní inženýrství [@inzenyrstvi], což nám umožnilo provést komplexní a vícestrannou analýzu.
 
 ## Popis použitých postupů pro vytvoření modelu a zdůvodnění, proč jsou pro zadaný problém vhodné
 
-Celá implementace byla vypracovaná v jazyce C++ a jeho standardní knihovny. Pro spracování argumentů příkazové řádky byla použita knihovna `getopt_long`. Bylo využito několik návrhových vzorů, jeden z nich byl například `Jedináček` (Singleton) pro ukládání nastavení simulace a statistik o průjezdech vozidel. Objektový návrh byl zvolený z důvodu jednoduchého rozšiřování a přehlednosti kódu a take jednoduchého a intuitivního mapování objektů v reálnem světe do kódu. Pro vizualizaci dat jsme použili jazyk Python a knihovnu `matplotlib` a `seaborn`.
+Celá implementace byla vypracovaná v jazyce C++ a jeho standardní knihovny. Pro spracování argumentů příkazové řádky byla použita knihovna `getopt_long`. Bylo využito několik návrhových vzorů, jeden z nich byl například `Jedináček` (Singleton) pro ukládání nastavení simulace [[@ims] č.s. 33] a statistik o průjezdech vozidel. Objektový návrh byl zvolený z důvodu jednoduchého rozšiřování a přehlednosti kódu a take jednoduchého a intuitivního mapování objektů v reálnem světe do kódu. Pro vizualizaci [[@ims] č.s. 318] dat jsme použili jazyk Python a knihovnu `matplotlib` a `seaborn`.
 
 ## Popis původu použitých metod/technologií
 
@@ -54,7 +54,7 @@ Zda-li:
 
 - `speed` = rychlost vozidla v hodnotach buňka/krok což odpovída metrům za sekundu
 - `gap` = vzdalenost vozidla od vozidla před ním, nebo od konce cesty
-- `p` = pravděpodobnost kolísání rychlosti, která je převzata z článku [@paper] a nakalibrovaná podle reálných dat
+- `p` = pravděpodobnost [[@ims] č.s. 73] kolísání rychlosti, která je převzata z článku [@paper] a nakalibrovaná podle reálných dat
 
 Algoritmus pohybu vozidla můžem podle článku [@paper] rozdělit do 2 stavů:
 
