@@ -35,14 +35,17 @@ doc:
 
 experiment-diameter: all
 	rm -rf diameter.csv
+	chmod +x ./script/diameter.sh
 	./script/diameter.sh
 
 experiment-approach-count: all
 	rm -rf approach-count.csv
+	chmod +x ./script/approach-count.sh
 	./script/approach-count.sh
 
 experiment-default: all
 	rm -rf default.csv
+	chmod +x ./script/default.sh
 	./script/default.sh
 
 zip:
