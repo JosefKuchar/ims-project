@@ -12,14 +12,14 @@ Roundabout::Roundabout() {
 }
 
 void Roundabout::print() {
-    for (int i = 0; i < mRoad.size(); i++) {
+    for (size_t i = 0; i < mRoad.size(); i++) {
         bool found = false;
-        for (int j = 0; j < mOutgoing.size(); j++) {
-            if (mOutgoing[j].getJoinIndex() == i) {
+        for (size_t j = 0; j < mOutgoing.size(); j++) {
+            if ((size_t)mOutgoing[j].getJoinIndex() == i) {
                 std::cout << "^";
                 found = true;
                 break;
-            } else if (mOutgoing[j].getJoinIndex() + 1 == i) {
+            } else if ((size_t)mOutgoing[j].getJoinIndex() + 1 == i) {
                 std::cout << "v";
                 found = true;
                 break;
