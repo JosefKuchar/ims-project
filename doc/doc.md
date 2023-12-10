@@ -4,8 +4,8 @@ bibliography: doc/doc.bib
 
 # Úvod
 
-V této práci je řešena implementace celulárního automatu [@ims č.s. 216], která bude použita pro sestavení modelu [@ims č.s. 7] jednoproudé okružní křižovatky (též kruhového objezdu).
-Na základě modelu a simulačních experimentů [@ims č.s. 9] bude ukázáno chování systému [@ims č.s. 18] v podmínkách běžného dopravního provozu.
+V této práci je řešena implementace celulárního automatu [[@ims] č.s. 216], která bude použita pro sestavení modelu [[@ims] č.s. 7] jednoproudé okružní křižovatky (též kruhového objezdu).
+Na základě modelu a simulačních experimentů [[@ims] č.s. 9] bude ukázáno chování systému [[@ims] č.s. 18] v podmínkách běžného dopravního provozu.
 Smyslem experimentů je demonstrovat, že změnou parametrů okružní křižovatky, lze zvýšit kapacita (propustnost) těchto křižovatek.
 
 ## Kdo se na práci podílel
@@ -44,6 +44,9 @@ Veškerý kód je vlastním dílem napsaný autory této zprávy, žádné čás
 Pro překlad byl použit nástroj `GNU Make`.
 
 # Koncepce
+
+Základní koncepce je popsána níže. Vychází z článku [@paper], který popisuje modelování jednoproudé okružní křižovatky pomocí celulárního automatu.
+Parametry modelu jsou převzaty.
 
 ## Modelování rychlosti vozidel
 
@@ -115,7 +118,7 @@ Else:
 
 # Architektura simulačního modelu/simulátoru
 
-Architekura simulačního modelu se řídí objektově orientovaným návrhem, snažili jsme se každou entitu v reálnem světe, např. silnici, kruhový objezd nebo auto reprezentovat jako objekt v kódu, který enkapsuluje jeho chování.
+Architekura simulačního modelu se řídí objektově orientovaným návrhem, snažili jsme se každou entitu v reálném světe, např. silnici, kruhový objezd nebo auto reprezentovat jako objekt v kódu, který zapouzdřuje jeho chování.
 
 ## Mapování abstraktního modelu do simulačního modelu
 
@@ -137,21 +140,29 @@ Nejprve bude pomocí experimentů ověřena validita modelu. Následně bude pom
 
 Experimenty probíhaly pomocí implementovaného simulačního nástroje. Všechny experimenty byly spuštěny na dobu 36000 kroků simulace, což odpovídá 10 hodinám reálného času. Tato doba byla zvolena na základě experimentů v článku [@paper], kde byla tato doba také zvolena.
 
+Jednotka PCU (Passenger Car Unit) je přepočet vozidla na ekvivalentní počet osobních automobilů. Konkrétní použitý přepočet je uveden v článku [@paper] a prezentaci [@intro].
+
 ## Jednotlivé experimenty
 
 ### Experiment 1
 
 Prvním experimentem bylo ověření základní funkčnosti modelu. Byla vytvořena okružní křižovatka se 4 rameny. Bylo sledováno zda se počet průjezdů vozidel pohybuje v přijatelném rozmezí.
 
-TODO Tabulka
+| Číslo běhu | Počet epoch | Počet projetých vozidel / hod | PCU / hod |
+| ---------- | ----------- | ----------------------------- | --------- |
+| 1.         | 36000       | 1910.8                        | 1901.95   |
+| 2.         | 36000       | 1920.3                        | 1920.70   |
+| 3.         | 36000       | 1916.2                        | 1913.70   |
+| 4.         | 36000       | 1919.9                        | 1914.55   |
+| 5.         | 36000       | 1921.2                        | 1913.20   |
 
-Z tabulky je vidět, že počet průjezdů vozidel se pohybuje v rozmezí 2000 až 2700 vozidel za hodinu, které byly uvedeny v článku časopisu [@inzenyrstvi]. Z toho lze usoudit, že model není zcela nesmyslný a je možné jej dále použít.
+Z tabulky je vidět, že počet průjezdů vozidel se pohybuje velmi blízko rozmezí 2000 až 2700 vozidel za hodinu, které byly uvedeny v článku časopisu [@inzenyrstvi]. Z toho lze usoudit, že model není zcela nesmyslný a je možné jej dále použít.
 
 ### Experiment 2
 
 V tomto experimentu byl testován vliv počtu ramen okružní křižovatky na její propustnost. Byl měněn v rozmezí 3 až 6 ramen. Průměr okružní křižovatky byl přímo úměrný počtu ramen. Na každé rameno připadalo 5 metrů průměru.
 
-TODO Graf
+![Approach count](img/approach-count.png)\
 
 Z grafu je vidět, že s přidáváním ramen se snižuje propustnost na jedno rameno. Limitujícím faktorem je skutečnost, že okružní křižovatka má stále jenom jeden pruh. Model se tedy chová podle očekávání.
 
@@ -159,7 +170,7 @@ Z grafu je vidět, že s přidáváním ramen se snižuje propustnost na jedno r
 
 V tomto experimentu byl testován vliv průmeru okružní křižovatky na její propustnost. byl měněn v rozmezí 20 až 60 metrů.
 
-TODO Graf
+![Diameter](img/diameter.png)\
 
 Z grafu je vidět, že se zvyšujícím se průměrem okružní křižovatky se zvyšuje její propustnost. Tento vztah je popsán v prezentaci [@intro], která na kterou se odvolává článek [@paper] ze kterého vychází naše implementace. Z toho lze usoudit, že je model validní.
 

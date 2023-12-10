@@ -28,15 +28,23 @@ obj:
 clean:
 	rm -rf obj model *.zip
 
-run: model
+run: all
 	./model
 
-doc:
+pdf:
 	pandoc -M reference-section-title=Literatura --csl style.csl --bibliography=doc/doc.bib --filter pandoc-citeproc -V lang=cs -V linkcolor=blue -V urlcolor=blue -V block-headings -N doc/doc.md -o doc.pdf
 
-experiment-diameter: model
+experiment-diameter: all
 	rm -rf diameter.csv
 	./script/diameter.sh
 
+experiment-approach-count: all
+	rm -rf approach-count.csv
+	./script/approach-count.sh
+
+experiment-default: all
+	rm -rf default.csv
+	./script/default.sh
+
 zip:
-	zip -r 08_xkucha28_xsirov00.zip doc.pdf src Makefile README.md
+	zip -r 08_xkucha28_xsirov00.zip doc.pdf src script Makefile README.md
