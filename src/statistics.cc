@@ -32,6 +32,8 @@ void Statistics::log() {
     std::ofstream logFile;
     logFile.open(mLogFilePath, std::ios::app);
 
+    std::cout << "Logging to " << mLogFilePath << std::endl;
+
     if (!exists) {
         logFile << "epochs,vehicle_count,pcu,diameter,approach_count\n";
     }
