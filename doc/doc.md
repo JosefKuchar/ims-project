@@ -120,6 +120,8 @@ Else:
 
 Architekura simulačního modelu se řídí objektově orientovaným návrhem, snažili jsme se každou entitu v reálném světe, např. silnici, kruhový objezd nebo auto reprezentovat jako objekt v kódu, který zapouzdřuje jeho chování.
 
+Většinu parametrů lze měnit pomocí argumentů příkazové řádky, což umožňuje jednoduché experimentování s parametry simulace. Pro získání informací o parametrech simulace lze použít argument `--help` (`-h`).
+
 ## Mapování abstraktního modelu do simulačního modelu
 
 Po spuštení programu se pomocí třídy `Args` zpracují argumenty příkazové řádky. Tyto argumenty jsou uložené ve tříde `Settings`, která je implementována jako návrhový vzor Jedináček.
@@ -143,6 +145,8 @@ Experimenty probíhaly pomocí implementovaného simulačního nástroje. Všech
 Jednotka PCU (Passenger Car Unit) je přepočet vozidla na ekvivalentní počet osobních automobilů. Konkrétní použitý přepočet je uveden v článku [@paper] a prezentaci [@intro].
 
 ## Jednotlivé experimenty
+
+Každy experiment lze spustit pomocí příkazu `make experiment-*` kde `*` je název experimentu (viz Makefile). Výsledky experimentů se uloží do kořenové složky jako CSV soubory.
 
 ### Experiment 1
 
