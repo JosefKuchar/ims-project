@@ -1,4 +1,3 @@
-# Author: Josef Kuchař (xkucha28)
 CPPFLAGS = -std=c++20 -O2 -Wall -Wextra -g
 
 # Get all .c files

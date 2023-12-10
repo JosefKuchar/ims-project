@@ -1,7 +1,6 @@
 #include "roundabout.h"
 #include <iostream>
 #include "settings.h"
-#include "utils.h"
 
 Roundabout::Roundabout() {
     auto& s = Settings::GetInstance();
